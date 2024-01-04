@@ -14,9 +14,11 @@
     height: 100vh;
 }
 
+/* 
 .sidebar--note {
-    /* display: flex; */
+    display: flex; 
 }
+ */
 
 .sidebar--header {
     display: flex;
