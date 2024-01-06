@@ -29,11 +29,22 @@ export default function App() {
     }
     
     function updateNote(text) {
-        setNotes(oldNotes => oldNotes.map(oldNote => {
-            return oldNote.id === currentNoteId
-                ? { ...oldNote, body: text }
-                : oldNote
-        }))
+        setNotes((oldNotes) => {
+          // Find the index of the note with the matching id
+          const index = oldNotes.findIndex(
+            (oldNote) => oldNote.id === currentNoteId
+          );
+
+          // moving the note to the top of the array
+          const movedNote = oldNotes[index];
+          const updatedNotes = [
+            { ...movedNote, body: text },
+            ...oldNotes.slice(0, index),
+            ...oldNotes.slice(index + 1),
+          ];
+
+          return updatedNotes;
+        });
     }
     
     function findCurrentNote() {
