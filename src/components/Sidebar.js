@@ -13,6 +13,11 @@ export default function Sidebar(props) {
                 <h4 className="text-snippet">
                     {note.body === "# Type your markdown note's title here" ? "Untitled" :  note.body.split("\n", 1)}
                 </h4>
+                <button 
+                    className="delete-btn"
+                >
+                    <i className="gg-trash trash-icon"></i>
+                </button>
             </div>
         </div>
     ))
