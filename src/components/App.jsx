@@ -9,9 +9,7 @@ import { notesCollection, db } from '../firebaseConfig'
 
 export default function App() {
     const [notes, setNotes] = React.useState([])    
-    const [currentNoteId, setCurrentNoteId] = useState(
-        (notes[0]?.id) || ""
-    )
+    const [currentNoteId, setCurrentNoteId] = useState("")
 
     const currentNote = notes.find(note => note.id === currentNoteId) || notes[0]
 
