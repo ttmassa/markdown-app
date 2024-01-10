@@ -77,14 +77,10 @@ export default function App() {
                     newNote={createNewNote}
                     deleteNote={deleteNote}
                 />
-                {
-                    currentNoteId && 
-                    notes.length > 0 &&
-                    <Editor 
-                        currentNote={currentNote} 
-                        updateNote={updateNote} 
-                    />
-                }
+                <Editor 
+                    currentNote={currentNote} 
+                    updateNote={updateNote} 
+                />
             </Split>
             :
             <div className="no-notes">
