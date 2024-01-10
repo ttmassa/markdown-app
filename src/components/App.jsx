@@ -25,6 +25,13 @@ export default function App() {
 
         return unsubscribe
     }, [])
+
+    // Set the default noteId to avoid it being an empty string 
+    useEffect(() => {
+        if (!currentNoteId) {
+            setCurrentNoteId(notes[0]?.id)
+        }
+    }, [notes, currentNoteId])
     
     async function createNewNote() {
         const newNote = {
