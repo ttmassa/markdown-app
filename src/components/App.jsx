@@ -3,7 +3,7 @@ import '../style.css'
 import Sidebar from './Sidebar'
 import Editor from './Editor'
 import Split from "react-split"
-import { onSnapshot, addDoc, deleteDoc, doc } from 'firebase/firestore'
+import { onSnapshot, doc, addDoc, deleteDoc, setDoc} from 'firebase/firestore'
 import { notesCollection, db } from '../firebaseConfig'
 
 
@@ -15,7 +15,7 @@ export default function App() {
 
     useEffect(() => {
         const unsubscribe = onSnapshot(notesCollection, function(snapshot) {
-            //Sync up our local notes with the snapshot data   
+            // Sync up our local notes with the snapshot data   
             const notesArr = snapshot.docs.map(doc => ({
                 ...doc.data(),
                 id: doc.id
@@ -41,23 +41,10 @@ export default function App() {
         setCurrentNoteId(newNoteRef.id)
     }
     
-    function updateNote(text) {
-        setNotes((oldNotes) => {
-          // Find the index of the note with the matching id
-          const index = oldNotes.findIndex(
-            (oldNote) => oldNote.id === currentNoteId
-          );
-
-          // moving the note to the top of the array
-          const movedNote = oldNotes[index];
-          const updatedNotes = [
-            { ...movedNote, body: text },
-            ...oldNotes.slice(0, index),
-            ...oldNotes.slice(index + 1),
-          ];
-
-          return updatedNotes;
-        });
+    // Set every changes to the correct note in db
+    async function updateNote(text) { 
+        const refDoc = doc(db, "notes", currentNoteId) 
+        await setDoc(refDoc, {body: text}, {merge: true})
     }
 
     async function deleteNote(noteId) {
