@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useCallback} from 'react'
 import '../style.css'
 import Sidebar from './Sidebar'
 import Editor from './Editor'
@@ -8,8 +8,9 @@ import { notesCollection, db } from '../firebaseConfig'
 
 
 export default function App() {
-    const [notes, setNotes] = React.useState([])    
+    const [notes, setNotes] = useState([])    
     const [currentNoteId, setCurrentNoteId] = useState("")
+    const [tempNoteText, setTempNoteText] = useState("")
 
     const currentNote = notes.find(note => note.id === currentNoteId) || notes[0]
 
@@ -32,6 +33,25 @@ export default function App() {
             setCurrentNoteId(notes[0]?.id)
         }
     }, [notes, currentNoteId])
+
+    // Set tempNoteText to the note's text
+    useEffect(() => {
+        if (currentNote) {
+            setTempNoteText(currentNote.body)
+        }
+    }, [currentNote])
+
+    // Debouncing to save number of request
+    useEffect(() => {
+        const timeoutID = setTimeout(() => {
+            // Everytime a change is made (except selecting a note), we update tempNoteText
+            if (tempNoteText !== currentNote.body) {
+                updateNote(tempNoteText)
+            }
+        }, 500)
+
+        return () => clearTimeout(timeoutID)
+    }, [tempNoteText])
 
     // Sort the notes array by time of update
     const sortedArray = notes.sort((a, b) => b.updatedAt - a.updatedAt)
@@ -74,9 +94,9 @@ export default function App() {
                     newNote={createNewNote}
                     deleteNote={deleteNote}
                 />
-                <Editor 
-                    currentNote={currentNote} 
-                    updateNote={updateNote} 
+                <Editor
+                    tempNoteText={tempNoteText}
+                    setTempNoteText={setTempNoteText}
                 />
             </Split>
             :
