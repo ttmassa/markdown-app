@@ -32,6 +32,9 @@ export default function App() {
             setCurrentNoteId(notes[0]?.id)
         }
     }, [notes, currentNoteId])
+
+    // Sort the notes array by time of update
+    const sortedArray = notes.sort((a, b) => b.updatedAt - a.updatedAt)
     
     async function createNewNote() {
         const newNote = {
@@ -65,7 +68,7 @@ export default function App() {
                 className="split"
             >
                 <Sidebar
-                    notes={notes}
+                    notes={sortedArray}
                     currentNote={currentNote}
                     setCurrentNoteId={setCurrentNoteId}
                     newNote={createNewNote}
